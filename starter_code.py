@@ -21,13 +21,24 @@ import json
 class SimpleCNN(nn.Module):
     def __init__(self):
         super(SimpleCNN, self).__init__()
-        # TODO - define the layers of the network you will use
-        ...
+        self.conv_layer_1 = nn.Conv2d(in_channels = 3, out_channels = 32, kernel_size = 3, padding = 1)     #comment
+        self.conv_layer_2 = nn.Conv2d(in_channels = 32, out_channels = 64, kernel_size = 3, padding = 1)        #comment
+        self.conv_layer_3 = nn.Conv2d(in_channels = 64, out_channels = 128, kernel_size = 3, padding = 1)       #comment
+        self.fully_connected_1 = nn.Linear(in_features = 128 * 4 * 4, out_features = 256)       #comment
+        self.fully_connected_2 = nn.Linear(in_features = 256, out_features = 100)       #comment
+        self.dropout_layer = nn.Dropout(p = 0.5)        #comment
     
     def forward(self, x):
-        # TODO - define the forward pass of the network you will use
-        ...
-
+        x = F.relu(self.conv_layer_1(x))        #comment
+        x = F.max_pool2d(x, kernel_size = 2, stride = 2)        #comment
+        x = F.relu(self.conv_layer_2(x))        #comment
+        x = F.max_pool2d(x, kernel_size = 2, stride = 2)        #comment
+        x = F.relu(self.conv_layer_3d(x))       #comment
+        x = F.max_pool2d(x, kernel_size = 2, stride = 2)        #comment
+        x = x.view(-1, 128 * 4 * 4)     #comment
+        x = F.relu(self.fully_connected_1(x))       #comment
+        x = self.droupout_layer(x)      #comment
+        x = self.fully_connected_2(x)       #comment
         return x
 
 ################################################################################
@@ -50,11 +61,14 @@ def train(epoch, model, trainloader, optimizer, criterion, CONFIG):
         # move inputs and labels to the target device
         inputs, labels = inputs.to(device), labels.to(device)
 
-        ### TODO - Your code here
-        ...
+        optimizer.zero_grad()       #comment
+        outputs = model(inputs)     #comment
+        loss = criterion(outputs, labels)       #comments
+        loss.backward()         #comment
+        optimizer.step()        #comment
 
-        running_loss += ...   ### TODO
-        _, predicted = ...    ### TODO
+        running_loss += loss.item()     #comment
+        _, predicted = outputs.max(1)       #comment
 
         total += labels.size(0)
         correct += predicted.eq(labels).sum().item()
@@ -87,11 +101,11 @@ def validate(model, valloader, criterion, device):
             # move inputs and labels to the target device
             inputs, labels = inputs.to(device), labels.to(device)
 
-            outputs = ... ### TODO -- inference
-            loss = ...    ### TODO -- loss calculation
+            outputs = model(inputs)     #comment
+            loss = criterion(outputs, labels)       #comment
 
-            running_loss += ...  ### SOLUTION -- add loss from this sample
-            _, predicted = ...   ### SOLUTION -- predict the class
+            running_loss += loss.item()     #comment
+            _, predicted = output.max(1)        #comment 
 
             total += labels.size(0)
             correct += predicted.eq(labels).sum().item()
@@ -135,16 +149,17 @@ def main():
     ############################################################################
 
     transform_train = transforms.Compose([
+        transforms.RandomCrop(32, padding = 4),      #comment
+        transforms.RandomHorizontalFlip(),       #comment
         transforms.ToTensor(),
-        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)), # Example normalization
-    ])
-
-    ###############
-    # TODO Add validation and test transforms - NO augmentation for validation/test
-    ###############
-
+        transforms.Normalize((0.507, 0.487, 0.441),(0.268, 0.257, 0.276))       #looked up and used values of CIFAR-100 mean and std
+        ])
+        
     # Validation and test transforms (NO augmentation)
-    transform_test = ...   ### TODO -- BEGIN SOLUTION
+    transform_test = transforms.Compose([
+        transform.ToTensor(),
+        transforms.Normalize((0.507, 0.487, 0.441),(0.268, 0.257, 0.276))       #looked up and used values of CIFAR-100 mean and std
+    ])      #was not augmented, simply normalized
 
     ############################################################################
     #       Data Loading

@@ -1,5 +1,3 @@
-# DS542 Deep Learning for Data Science -- Spring 2025 Midterm Challenge
-
 ## Overview
 
 This repository contains the code for the midterm challenge of the course DS542 Deep Learning for Data Science.
@@ -12,87 +10,62 @@ The challenge is in three parts:
 3. **Part 3 -- Transfer Learning from a Pretrained Model:** Pretrain a model, or use one of the pretrained models from torchvision, and
    fine-tune it on CIFAR-100. Try to beat the best benchmark performance on the leaderboard.
 
-All your models should be built from linear and convoultional layers, as well as pooling, etc. We haven't covered Transformers yet,
-so don't use Transformer architectures.
+## Files in Repository
 
-There is example starter template in `starter_code.py` which includes evaluation and submissions generation code. We suggest
-you copy and revise that code for each of the three parts above. In other words, your repo should have (at least) the three
-files, one for each part described above, as well as any supporting files.
+Below is a breakdown of the files included in this repository, grouped by purpose, with descriptions based on their function in the project:
 
-For each part, submit the results to the Kaggle [leaderboard](https://www.kaggle.com/t/3551aa4f562f4b79b93204b11ae640b4).
+---
 
-Your best result needs beat the best benchmark performance of 0.397 on the leaderboard.
+### Report & Guidelines
 
-Use Weights and Biases experiment tracking tool to track your experiments. Create
-a free student account at [WandB](https://wandb.ai). The starter code is already
-instrumented for WandB, so it will start tracking experiments right away.
+- `assignment_guidelines/` — Contents from the original `README.md` file provided by instructors, transferred here.
+- `image-1.png`, `image-2.png`, `image-3.png`, `image-4.png` — Images used in the Assignment Report section of the `README.md`.
 
-You can write your report using the WandB Reports UI if you wish.
+---
 
-## Data
+### Model Scripts
 
-You will start with the CIFAR-100 dataset, which is downloaded and installed the
-first time your successfully run the sample code, `starter_code.py`.
+#### Model 1: Simple CNN
 
-It should install into the `data/cifar-100-python` directory.
+- `model_1_epoch_test.py` — Model 1 with different epoch values to determine which one has the best performance.
+- `model_1.py` — Simple CNN with the best-performing configuration (epoch value set to 50).
 
-We also have the challenge images in `data/ood-test` directory. Those are used
-to make predictions on the challenge images with your model and produce the 
-submission file.
+#### Model 2: ResNet-18 (No Pretrained Weights)
 
-## Setup
+- `model_2_hyperparam.py` — Model 2 (ResNet-18 without pretrained weights) running grid search to find the best configuration.
+- `model_2_best_param.py` — Model 2 using the best configuration determined from `model_2_hyperparam.py`.
 
-Fork this repository to your GitHub account and clone it to your local machine
-or to the SCC.
+#### Model 3: ResNet-18 (Pretrained)
 
-On MacOS and Linux, you can create a virtual environment and install the
-dependencies with the following commands:
+- `model_3_hyperparam.py` — Model 3 (ResNet-18 pretrained) running grid search to find the best configuration.
+- `model_3_best_param.py` — Model 3 using the best configuration determined from `model_3_hyperparam.py`.
 
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install --upgrade pip
-pip install -r requirements.txt
-```
+---
 
-## Report
+### Evaluation & Submission Files
 
-In addition to the code, we require a short report that includes:
+- `eval_cifar100.py` — Evaluation code for the clean CIFAR-100 test set.
+- `eval_ood.py` — Evaluation code for the out-of-distribution (OOD) test set.
+- `submission_ood_model_1.py` — OOD output for Model 1 that was uploaded to Kaggle.
+- `submission_ood_model_2.py` — OOD output for Model 2 that was uploaded to Kaggle.
+- `submission_ood_model_3.py` — OOD output for Model 3 that was uploaded to Kaggle.
+- `sample_submission.csv` — Sample output file for the OOD evaluation.
 
-* **AI Disclosure:** You are allowed to use AI assistance for this assignment, but you are required to:
-    * Explain how you used AI, e.g. Copilot, Cursor, ChatGPT, etc.
-    * Enumerate in detail which parts of the code were written by you and which were written with AI assistance.
-    * Have detailed code comments explaining what every part of your code does. This can be in the codebase itself.
-    * **Failure to disclose how you used AI may result in a score of 0 for the assignment.**
-* **Model Description:** Detailed explanation of the chosen architecture, including justifications for design choices.
-* **Hyperparameter Tuning:** Description of the hyperparameter search process and the final chosen values.
-* **Regularization Techniques:** Explanation of the regularization methods used and their impact.
-* **Data Augmentation Strategy:** Description of the data augmentation techniques used.
-* **Results Analysis:** Discussion of the results, including strengths and weaknesses of the model, and potential areas for improvement.
-* **Experiment Tracking Summary:**  Include screenshots or summaries from the experiment tracking tool.
-  You can use the WandB Reports UI to create a report as well.
+---
 
-## Grading Rubric
+### Utility & Dependencies
 
-The grading rubric is as follows:
+- `utils.py` — Utility functions used in the training and evaluation pipeline.
+- `requirements.txt` — Requirements needed to run scripts in this repository.
 
-* **Code Quality (30%):**
-    * Correctness of implementation.
-    * Readability and organization of code.
-    * Use of PyTorch best practices.
-    * Efficiency of data loading and processing.
-* **Model Performance (40%):**
-    * Performance on the primary evaluation metric.
-    * Ranking on the leaderboard of at least above 0.397
-    * List the leaderboard performance, identifier and username for the best scores for each of the three parts of the assignment.
-* **Experiment Tracking and Report (30%):**
-    * Comprehensive AI disclosure statement.
-    * Completeness and clarity of the report.
-    * Thoroughness of experiment tracking.
-    * Justification of design choices.
-    * Analysis of results.
-    * Ablation study (if included).
+---
 
-## Bonus Points (Optional)
+### Model Checkpoints
 
-The top 10 students on the Private leaderboard will receive bonus points.
+- `best_model.pth` — Saved PyTorch model from the best configuration.
+
+---
+
+### Starter Material
+
+- `starter_code.py` — Starter code provided by instructors for the model framework.
